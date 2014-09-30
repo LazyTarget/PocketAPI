@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocketAPI", "PocketAPI\PocketAPI.csproj", "{88A7918C-F989-4D27-B9D7-751B2CC33CEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{CBAD9979-B419-44F3-85B5-6305B7EF1E48}"
+EndProject
+Global
+	GlobalSection(VaultVsipSolution-v1) = preSolution
+		VaultHost = http://83.251.83.90/VaultService
+		VaultRepositoryID = 2
+		VaultRepositoryGUID = 4b71372d-f9e4-433e-92bb-5ce483ca5cda
+		ProjectCount = 2
+		ProjectRelativeDiskPath1 = PocketAPI\PocketAPI.csproj
+		ProjectRelativeDiskPath2 = TestConsole\TestConsole.csproj
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88A7918C-F989-4D27-B9D7-751B2CC33CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88A7918C-F989-4D27-B9D7-751B2CC33CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88A7918C-F989-4D27-B9D7-751B2CC33CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88A7918C-F989-4D27-B9D7-751B2CC33CEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBAD9979-B419-44F3-85B5-6305B7EF1E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBAD9979-B419-44F3-85B5-6305B7EF1E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBAD9979-B419-44F3-85B5-6305B7EF1E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBAD9979-B419-44F3-85B5-6305B7EF1E48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
