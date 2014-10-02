@@ -8,7 +8,7 @@ namespace TestConsole
 {
     class Program
     {
-        private static Service svc;
+        private static PocketApi svc;
         private static ConfirmEventArgs _confirmEventArgs;
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            svc = new Service();
+            svc = new PocketApi();
             svc.ConsumerKey = "25447-07c62f25a2a1ca3066679052";
             svc.RedirectUri = "http://www.xhaus.com/headers";
             svc.OnConfirmRequired += Pocket_OnConfirmRequired;
@@ -27,7 +27,7 @@ namespace TestConsole
 
             for (var i = 1; i < 3; i++)
             {
-                Console.WriteLine(string.Format("---BEGIN #{0}---", i));
+                Console.WriteLine("---BEGIN #{0}---", i);
                 var titles = svc.GetItems().Select(x => x.ResolvedTitle).ToList();
                 if (titles.Any())
                 {
@@ -36,7 +36,7 @@ namespace TestConsole
                 }
                 else
                     Console.WriteLine("No items");
-                Console.WriteLine(string.Format("---END #{0}---", i));
+                Console.WriteLine("---END #{0}---", i);
                 Console.WriteLine();
             }
             
