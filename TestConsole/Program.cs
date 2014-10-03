@@ -25,21 +25,30 @@ namespace TestConsole
 
             svc.Deauthenticate();
 
-            for (var i = 1; i < 3; i++)
+            try
             {
-                Console.WriteLine("---BEGIN #{0}---", i);
-                var titles = svc.GetItems().Select(x => x.ResolvedTitle).ToList();
-                if (titles.Any())
+                for (var i = 1; i < 3; i++)
                 {
-                    foreach (var t in titles)
-                        Console.WriteLine(t);
+                    Console.WriteLine("---BEGIN #{0}---", i);
+                    var titles = svc.GetItems().Select(x => x.ResolvedTitle).ToList();
+                    if (titles.Any())
+                    {
+                        foreach (var t in titles)
+                            Console.WriteLine(t);
+                    }
+                    else
+                        Console.WriteLine("No items");
+                    Console.WriteLine("---END #{0}---", i);
+                    Console.WriteLine();
                 }
-                else
-                    Console.WriteLine("No items");
-                Console.WriteLine("---END #{0}---", i);
-                Console.WriteLine();
             }
-            
+            catch (PocketException ex)
+            {
+                Console.WriteLine("PocketException thrown!!");
+                Console.WriteLine("Error: {0}", ex.Message);
+                Console.WriteLine("ErrorCode: {0}", ex.ErrorCode);
+            }
+
 
             Console.ReadLine();
         }

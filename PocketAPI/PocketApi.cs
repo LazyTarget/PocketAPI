@@ -107,10 +107,11 @@ namespace PocketAPI
                     return code;
                 }
                 else
-                {
-                    var error = response.Response.GetResponseHeader("X-Error");
-
-                }
+                    throw PocketException.Create(response.Response);
+            }
+            catch (WebException ex)
+            {
+                throw PocketException.Create(ex);
             }
             catch (Exception ex)
             {
@@ -152,21 +153,18 @@ namespace PocketAPI
                     return accessToken;
                 }
                 else
-                {
-                    var error = response.Response.GetResponseHeader("X-Error");
-
-                }
+                    throw PocketException.Create(response.Response);
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
-                throw;
+                throw PocketException.Create(ex);
             }
             username = null;
             return null;
         }
 
 
-        public IEnumerable<Item> GetItems()
+        private IEnumerable<Item> _GetItems()
         {
             Authenticate();
 
@@ -188,8 +186,8 @@ namespace PocketAPI
 
             if (response.Response.StatusCode == HttpStatusCode.OK)
             {
-                var list = (JObject) response.Result.GetValue("list");
-                
+                var list = (JObject)response.Result.GetValue("list");
+
                 foreach (JProperty i in list.Properties())
                 {
                     var item = Item.FromJToken(i.Value);
@@ -197,8 +195,37 @@ namespace PocketAPI
                 }
             }
             else
+                throw PocketException.Create(response.Response);
+        }
+
+
+
+        public IEnumerable<Item> GetItems()
+        {
+            var enumerable = _GetItems();
+            var enumerator = enumerable.GetEnumerator();
+            enumerable = TryCatchEnumerable(enumerator);
+            return enumerable;
+        }
+
+
+
+        private static IEnumerable<T> TryCatchEnumerable<T>(IEnumerator<T> enumerator)
+        {
+            while (true)
             {
-                var error = response.Response.GetResponseHeader("X-Error");
+                T item;
+                try
+                {
+                    if (!enumerator.MoveNext())
+                        break;
+                    item = enumerator.Current;
+                }
+                catch (WebException ex)
+                {
+                    throw PocketException.Create(ex);
+                }
+                yield return item;
             }
         }
 

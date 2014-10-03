@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 
 namespace PocketAPI
@@ -9,7 +8,7 @@ namespace PocketAPI
         protected override HttpWebRequest BuildRequest(IHttpHelperRequest request)
         {
             var httpWebRequest = base.BuildRequest(request);
-            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Accept = null;
             httpWebRequest.ContentType = "application/json; charset=UTF-8";
             httpWebRequest.Headers.Add("X-Accept", "application/json");
             return httpWebRequest;
@@ -21,13 +20,9 @@ namespace PocketAPI
             if (request.Data == null)
                 return;
 
-            using (var sw = new StreamWriter(requestStream, Encoding))
-            {
-                var json = Newtonsoft.Json.JsonConvert.SerializeObject(request.Data);
-                sw.WriteLine(json);
-
-                sw.Close();
-            }
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(request.Data);
+            var byteArray = Encoding.GetBytes(json);
+            requestStream.Write(byteArray, 0, byteArray.Length);
         }
 
 
@@ -38,7 +33,7 @@ namespace PocketAPI
         }
 
 
-        protected override T Serialize<T>(object data)
+        protected override T Deserialize<T>(object data)
         {
             T result;
             if (data is string)

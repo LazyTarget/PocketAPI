@@ -36,7 +36,7 @@ namespace PocketAPI
             var httpWebRequest = BuildRequest(request);
             var httpWebResponse = (HttpWebResponse) httpWebRequest.GetResponse();
             var responseData = GetResponseData(request, httpWebResponse);
-            var result = Serialize<T>(responseData);
+            var result = Deserialize<T>(responseData);
             var response = new HttpHelperResponse<T>(result, httpWebRequest, httpWebResponse);
             return response;
         }
@@ -67,12 +67,16 @@ namespace PocketAPI
             if (request.Data == null)
                 return;
 
-            using (var sw = new StreamWriter(requestStream, Encoding))
-            {
-                sw.WriteLine(request.Data);
+            var dataString = request.Data.ToString();
+            var byteArray = Encoding.GetBytes(dataString);
+            requestStream.Write(byteArray, 0, byteArray.Length);
 
-                sw.Close();
-            }
+            //using (var sw = new StreamWriter(requestStream, Encoding))
+            //{
+            //    sw.WriteLine(request.Data);
+
+            //    sw.Close();
+            //}
         }
 
 
@@ -104,7 +108,7 @@ namespace PocketAPI
 
 
 
-        protected virtual T Serialize<T>(object data)
+        protected virtual T Deserialize<T>(object data)
         {
             var result = (T) data;
             return result;
