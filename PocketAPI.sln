@@ -8,14 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{CBAD9979-B419-44F3-85B5-6305B7EF1E48}"
 EndProject
 Global
-	GlobalSection(VaultVsipSolution-v1) = preSolution
-		VaultHost = http://83.251.83.90/VaultService
-		VaultRepositoryID = 2
-		VaultRepositoryGUID = 4b71372d-f9e4-433e-92bb-5ce483ca5cda
-		ProjectCount = 2
-		ProjectRelativeDiskPath1 = PocketAPI\PocketAPI.csproj
-		ProjectRelativeDiskPath2 = TestConsole\TestConsole.csproj
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

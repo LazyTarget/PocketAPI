@@ -1,7 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 namespace PocketAPI
 {
@@ -53,11 +51,4 @@ namespace PocketAPI
 
     }
 
-
-    public enum ItemStatus
-    {
-        New,
-        Archived,
-        Deleted
-    }
 }
