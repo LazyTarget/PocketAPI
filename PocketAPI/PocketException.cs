@@ -48,7 +48,6 @@ namespace PocketAPI
             var pocketException = new PocketException(error);
             pocketException.ErrorCode = Convert.ToInt32(httpWebResponse.GetResponseHeader("X-Error-Code"));
             return pocketException;
-
         }
 
     }

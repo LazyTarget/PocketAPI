@@ -1,10 +1,23 @@
 ﻿using System.IO;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace PocketAPI
 {
     public class JsonHttpHelper : HttpHelperBase
     {
+        private JsonSerializerSettings Settings { get; set; }
+
+        public JsonHttpHelper()
+        {
+            Settings = new JsonSerializerSettings
+            {
+                DateParseHandling = DateParseHandling.DateTime,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
+        }
+
+
         protected override HttpWebRequest BuildRequest(IHttpHelperRequest request)
         {
             var httpWebRequest = base.BuildRequest(request);
@@ -20,7 +33,7 @@ namespace PocketAPI
             if (request.Data == null)
                 return;
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(request.Data);
+            var json = JsonConvert.SerializeObject(request.Data, Settings);
             var byteArray = Encoding.GetBytes(json);
             requestStream.Write(byteArray, 0, byteArray.Length);
         }
@@ -39,12 +52,12 @@ namespace PocketAPI
             if (data is string)
             {
                 var json = (string)data;
-                result = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
+                result = JsonConvert.DeserializeObject<T>(json, Settings);
             }
             else
             {
-                var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-                result = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
+                var json = JsonConvert.SerializeObject(data, Settings);
+                result = JsonConvert.DeserializeObject<T>(json, Settings);
             }
             return result;
         }

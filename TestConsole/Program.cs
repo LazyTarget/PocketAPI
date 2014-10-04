@@ -23,33 +23,100 @@ namespace TestConsole
             svc.OnConfirmRequired += Pocket_OnConfirmRequired;
 
 
-            svc.Deauthenticate();
-
-            try
+            do
             {
-                for (var i = 1; i < 3; i++)
+                Console.WriteLine();
+
+                Console.WriteLine("Commands:");
+                Console.WriteLine("  Get - retrievies last 10 items");
+                Console.WriteLine("  Add #id/url - adds item");
+                Console.WriteLine("  Archive #id - archives item with id");
+                Console.Write("> ");
+                var input = Console.ReadLine();
+                
+                try
                 {
-                    Console.WriteLine("---BEGIN #{0}---", i);
-                    var titles = svc.GetItems().Select(x => x.ResolvedTitle).ToList();
-                    if (titles.Any())
+                    var actions = new List<PocketAction>();
+                    if (string.IsNullOrWhiteSpace(input))
                     {
-                        foreach (var t in titles)
-                            Console.WriteLine(t);
+                        break;
+                    }
+                    else if (input == "Get")
+                    {
+                        Console.WriteLine("---Items---");
+                        var titles = svc.GetItems().ToList();
+                        if (titles.Any())
+                        {
+                            foreach (var t in titles)
+                                Console.WriteLine("#{0} {1}", t.ItemID, t.ResolvedTitle);
+                        }
+                        else
+                            Console.WriteLine("No items");
+                        Console.WriteLine();
+                    }
+                    else if (input.IndexOf("Add ") == 0)
+                    {
+                        var idStr = input.Substring("Add ".Length).Trim();
+                        int id;
+                        if (int.TryParse(idStr, out id))
+                        {
+                            actions.Add(new AddPocketAction
+                            {
+                                ItemID = id
+                            });
+                        }
+                        else if (!string.IsNullOrWhiteSpace(idStr))
+                        {
+                            actions.Add(new AddPocketAction
+                            {
+                                Url = idStr
+                            });
+                        }
+                        else
+                            Console.WriteLine("Invalid id/url");
+                    }
+                    else if (input.IndexOf("Archive ") == 0)
+                    {
+                        var idStr = input.Substring("Archive ".Length).Trim();
+                        int id;
+                        if (int.TryParse(idStr, out id))
+                        {
+                            actions.Add(new ArchivePocketAction
+                            {
+                                ItemID = id
+                            });
+                        }
+                        else
+                            Console.WriteLine("Invalid id");
                     }
                     else
-                        Console.WriteLine("No items");
-                    Console.WriteLine("---END #{0}---", i);
-                    Console.WriteLine();
+                    {
+                        
+                    }
+
+
+                    if (actions.Any())
+                    {
+                        var result = svc.Modify(actions);
+                        foreach (var actionResult in result)
+                        {
+                            Console.WriteLine(" {0} => {1}", actionResult.Action, actionResult.Success);
+                        }
+                    }
+
                 }
-            }
-            catch (PocketException ex)
-            {
-                Console.WriteLine("PocketException thrown!!");
-                Console.WriteLine("Error: {0}", ex.Message);
-                Console.WriteLine("ErrorCode: {0}", ex.ErrorCode);
-            }
+                catch (PocketException ex)
+                {
+                    Console.WriteLine("PocketException thrown!!");
+                    Console.WriteLine("Error: {0}", ex.Message);
+                    Console.WriteLine("ErrorCode: {0}", ex.ErrorCode);
+                }
+
+            } while (true);
 
 
+            Console.WriteLine();
+            Console.WriteLine("Exiting application");
             Console.ReadLine();
         }
 

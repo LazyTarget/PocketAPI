@@ -51,6 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Actions\ActionResult.cs" />
+    <Compile Include="Components\Actions\AddPocketAction.cs" />
+    <Compile Include="Components\Actions\ArchivePocketAction.cs" />
+    <Compile Include="Components\Actions\PocketAction.cs" />
     <Compile Include="Components\HttpHelperBase.cs" />
     <Compile Include="Components\HttpHelperRequest.cs" />
     <Compile Include="Components\HttpHelperResponse.cs" />

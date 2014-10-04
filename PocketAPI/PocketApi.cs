@@ -17,6 +17,7 @@ namespace PocketAPI
             public const string AuthConfirmURL = "https://getpocket.com/auth/authorize?request_token={TOKEN}&redirect_uri={REDIRECT}";
 
             public const string GetItems = "https://getpocket.com/v3/get";
+            public const string Modify = "https://getpocket.com/v3/send";
         }
 
 
@@ -182,7 +183,7 @@ namespace PocketAPI
                 Url = URL.GetItems,
                 Method = HttpMethod.POST
             };
-            var response = HttpHelper.Send<JObject>(request);
+            var response = HttpHelper.Send<JObject>(request);       // todo: create dto
 
             if (response.Response.StatusCode == HttpStatusCode.OK)
             {
@@ -197,9 +198,7 @@ namespace PocketAPI
             else
                 throw PocketException.Create(response.Response);
         }
-
-
-
+        
         public IEnumerable<Item> GetItems()
         {
             var enumerable = _GetItems();
@@ -207,6 +206,59 @@ namespace PocketAPI
             enumerable = TryCatchEnumerable(enumerator);
             return enumerable;
         }
+
+
+        private IEnumerable<ActionResult> _Modify(IEnumerable<PocketAction> actions)
+        {
+            Authenticate();
+
+            var actionsList = actions.ToList();
+
+            var requestData = new Dictionary<string, object>();
+            requestData.Add("consumer_key", ConsumerKey);
+            requestData.Add("access_token", _accessCode);
+            requestData.Add("actions", actionsList);
+
+
+            var request = new HttpHelperRequest
+            {
+                Data = requestData,
+                Url = URL.Modify,
+                Method = HttpMethod.POST
+            };
+            var response = HttpHelper.Send<JObject>(request);       // todo: create dto
+
+            if (response.Response.StatusCode == HttpStatusCode.OK)
+            {
+                var status = Convert.ToInt32(response.Result.GetValue("status"));
+                if (status == 0)
+                    throw PocketException.Create(response.Response);
+
+                var results = (JArray) response.Result.GetValue("action_results");
+                for (var i = 0; i < results.Count; i++)
+                {
+                    var result = results[i];
+                    var res = result.ToObject<bool>();
+                    var actionResult = new ActionResult
+                    {
+                        Action = actionsList.ElementAt(i),
+                        Success = res
+                    };
+                    yield return actionResult;
+                }
+            }
+            else
+                throw PocketException.Create(response.Response);
+        }
+
+        public IEnumerable<ActionResult> Modify(IEnumerable<PocketAction> actions)
+        {
+            var enumerable = _Modify(actions);
+            var enumerator = enumerable.GetEnumerator();
+            enumerable = TryCatchEnumerable(enumerator);
+            return enumerable;
+        }
+
 
 
 
