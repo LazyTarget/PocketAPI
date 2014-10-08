@@ -22,88 +22,314 @@ namespace TestConsole
             svc.RedirectUri = "http://www.xhaus.com/headers";
             svc.OnConfirmRequired += Pocket_OnConfirmRequired;
 
-
+            var multi = false;
+            var actions = new List<PocketAction>();
             do
             {
                 Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine();
 
                 Console.WriteLine("Commands:");
-                Console.WriteLine("  Get - retrievies last 10 items");
-                Console.WriteLine("  Add #id/url - adds item");
-                Console.WriteLine("  Archive #id - archives item with id");
+                Console.WriteLine(" App commands:");
+                Console.WriteLine("    Multi {Bool} - enables/disables multi edit");
+                Console.WriteLine("    Send - sends multi edit actions");
+                Console.WriteLine("    Exit - exits application");
+                Console.WriteLine(" Retrieve commands:");
+                Console.WriteLine("    Get - retrievies last 10 items");
+                Console.WriteLine(" Modify commands:");
+                Console.WriteLine("    Add #id/url - adds item");
+                Console.WriteLine("    Archive #id - archives item with id");
+                Console.WriteLine("    Unarchive #id - moves an item from the archive to the list");
+                Console.WriteLine("    Favorite #id - favorite item with id");
+                Console.WriteLine("    Unfavorite #id - unfavorite item with id");
+                Console.WriteLine("    Delete #id - delete item with id");
+                Console.WriteLine("    Tags_Add #id 'tag,tag2' - adds tags to item");
+                Console.WriteLine("    Tags_Replace #id 'tag,tag2' - replaces tags on item");
+                Console.WriteLine("    Tags_Remove #id 'tag,tag2' - removes tags from item");
+                Console.WriteLine("    Tags_Clear #id - removes all tags from item");
                 Console.Write("> ");
                 var input = Console.ReadLine();
-                
+
                 try
                 {
-                    var actions = new List<PocketAction>();
-                    if (string.IsNullOrWhiteSpace(input))
+                    input = input ?? "";
+                    var commandFound = true;
+                    string command = null;
+                    var commandArgs = new List<object>();
+                    var parts = input.Split(' ');
+                    string temp = null;
+                    for (var i = 0; i < parts.Length; i++)
                     {
+                        var x = (parts[i] ?? "").Trim();
+                        if (string.IsNullOrWhiteSpace(x))
+                            continue;
+
+                        if (x.StartsWith("\""))
+                            temp = x;
+                        else if (temp != null)
+                            temp += " " + x;
+                        if (temp != null && x.EndsWith("\""))
+                        {
+                            x = temp.Trim('"');
+                            temp = null;
+                        }
+
+
+                        if (command == null)
+                            command = x.ToLower();
+                        else if (temp == null)
+                            commandArgs.Add(x);
+                            
+                    }
+                    if (string.IsNullOrWhiteSpace(command))
+                    {
+                        continue;
                         break;
                     }
-                    else if (input == "Get")
+
+
+                    if (command == "exit")
+                    {
+                        return;
+                    }
+                    else if (command == "multi")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            bool tmp;
+                            if (bool.TryParse(Convert.ToString(itemArg), out tmp))
+                            {
+                                multi = tmp;
+                                actions.Clear();
+                                Console.WriteLine("Multi set to: " + multi);
+                            }
+                            else
+                                Console.WriteLine("Invalid input!!");
+                        }
+                        else
+                            Console.WriteLine("Multi: " + multi);
+                    }
+                    else if (command == "get")
                     {
                         Console.WriteLine("---Items---");
                         var titles = svc.GetItems().ToList();
                         if (titles.Any())
                         {
                             foreach (var t in titles)
-                                Console.WriteLine("#{0} {1}", t.ItemID, t.ResolvedTitle);
+                                Console.WriteLine("{0}  {1}", t.ItemID, t.ResolvedTitle);
                         }
                         else
                             Console.WriteLine("No items");
                         Console.WriteLine();
                     }
-                    else if (input.IndexOf("Add ") == 0)
+                    else if (command == "add")
                     {
-                        var idStr = input.Substring("Add ".Length).Trim();
-                        int id;
-                        if (int.TryParse(idStr, out id))
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
                         {
                             actions.Add(new AddPocketAction
                             {
-                                ItemID = id
-                            });
-                        }
-                        else if (!string.IsNullOrWhiteSpace(idStr))
-                        {
-                            actions.Add(new AddPocketAction
-                            {
-                                Url = idStr
+                                Url = Convert.ToString(itemArg)
                             });
                         }
                         else
-                            Console.WriteLine("Invalid id/url");
+                            Console.WriteLine("Missing url argument");
                     }
-                    else if (input.IndexOf("Archive ") == 0)
+                    else if (command == "archive")
                     {
-                        var idStr = input.Substring("Archive ".Length).Trim();
-                        int id;
-                        if (int.TryParse(idStr, out id))
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
                         {
                             actions.Add(new ArchivePocketAction
                             {
-                                ItemID = id
+                                ItemID = Convert.ToInt32(itemArg)
                             });
                         }
                         else
-                            Console.WriteLine("Invalid id");
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "unarchive")
+                    {
+                        var a = commandArgs.ElementAtOrDefault(0);
+                        if (a != null)
+                        {
+                            actions.Add(new UnarchivePocketAction
+                            {
+                                ItemID = Convert.ToInt32(a)
+                            });
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "favorite")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            actions.Add(new FavoritePocketAction
+                            {
+                                ItemID = Convert.ToInt32(itemArg)
+                            });
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "unfavorite")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            actions.Add(new UnfavoritePocketAction
+                            {
+                                ItemID = Convert.ToInt32(itemArg)
+                            });
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "delete")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            actions.Add(new DeletePocketAction
+                            {
+                                ItemID = Convert.ToInt32(itemArg)
+                            });
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "tags_add")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            var tags = (string) commandArgs.ElementAtOrDefault(1);
+                            if (!string.IsNullOrWhiteSpace(tags))
+                            {
+                                actions.Add(new TagsAddPocketAction
+                                {
+                                    ItemID = Convert.ToInt32(itemArg),
+                                    Tags = tags,
+                                });
+                            }
+                            else
+                                Console.WriteLine("Missing tag argument");
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "tags_replace")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            var tags = (string) commandArgs.ElementAtOrDefault(1);
+                            if (!string.IsNullOrWhiteSpace(tags))
+                            {
+                                actions.Add(new TagsReplacePocketAction
+                                {
+                                    ItemID = Convert.ToInt32(itemArg),
+                                    Tags = tags,
+                                });
+                            }
+                            else
+                                Console.WriteLine("Missing tag argument");
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "tags_remove")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            var tags = (string) commandArgs.ElementAtOrDefault(1);
+                            if (!string.IsNullOrWhiteSpace(tags))
+                            {
+                                actions.Add(new TagsRemovePocketAction
+                                {
+                                    ItemID = Convert.ToInt32(itemArg),
+                                    Tags = tags,
+                                });
+                            }
+                            else
+                                Console.WriteLine("Missing tag argument");
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "tag_rename")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            var oldTag = Convert.ToString(commandArgs.ElementAtOrDefault(1));
+                            var newTag = Convert.ToString(commandArgs.ElementAtOrDefault(2));
+
+                            if (!string.IsNullOrWhiteSpace(oldTag) &&
+                                !string.IsNullOrWhiteSpace(newTag))
+                            {
+                                actions.Add(new TagRenamePocketAction
+                                {
+                                    ItemID = Convert.ToInt32(itemArg),
+                                    OldTag = oldTag,
+                                    NewTag = newTag
+                                });
+                            }
+                            else
+                                Console.WriteLine("Missing tag arguments");
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
+                    }
+                    else if (command == "tags_clear")
+                    {
+                        var itemArg = commandArgs.ElementAtOrDefault(0);
+                        if (itemArg != null)
+                        {
+                            actions.Add(new TagsClearPocketAction
+                            {
+                                ItemID = Convert.ToInt32(itemArg),
+                            });
+                        }
+                        else
+                            Console.WriteLine("Missing ItemID argument");
                     }
                     else
                     {
-                        
+                        commandFound = false;
                     }
 
 
-                    if (actions.Any())
+
+                    if ((!multi && commandFound && actions.Any()) || command == "send")
                     {
-                        var result = svc.Modify(actions);
-                        foreach (var actionResult in result)
+                        if (actions.Any())
                         {
-                            Console.WriteLine(" {0} => {1}", actionResult.Action, actionResult.Success);
+                            Console.WriteLine("Result: ");
+                            var result = svc.Modify(actions);
+                            foreach (var actionResult in result)
+                            {
+                                Console.WriteLine("  {0}", actionResult);
+                            }
+                            Console.WriteLine();
+                            actions.Clear();
+                        }
+                        else
+                        {
+                            Console.WriteLine("No actions to send!");
                         }
                     }
+                    
 
+
+                    Console.WriteLine("Press enter to continue...");
+                    Console.ReadLine();
                 }
                 catch (PocketException ex)
                 {
