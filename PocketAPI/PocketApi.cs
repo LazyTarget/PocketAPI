@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Newtonsoft.Json.Linq;
 
 namespace PocketAPI
@@ -191,7 +189,8 @@ namespace PocketAPI
 
                 foreach (JProperty i in list.Properties())
                 {
-                    var item = Item.FromJToken(i.Value);
+                    //var item = Item.FromJToken(i.Value);
+                    var item = i.Value.ToObjectOrDefault<Item>();   // todo: refactor, no hard code to json
                     yield return item;
                 }
             }
@@ -237,12 +236,22 @@ namespace PocketAPI
                 var results = (JArray) response.Result.GetValue("action_results");
                 for (var i = 0; i < results.Count; i++)
                 {
+                    var action = actionsList.ElementAt(i);
                     var result = results[i];
-                    var res = result.ToObject<bool>();
+                    var obj = result.ToObject<object>();
+                    var res = obj != null;
+                    if (obj is bool)
+                        res = Convert.ToBoolean(obj);
+
+                    if (action is AddPocketAction)
+                        obj = result.ToObjectOrDefault<Item>();
+                        //obj = Item.FromJToken(result);
+
                     var actionResult = new ActionResult
                     {
-                        Action = actionsList.ElementAt(i),
-                        Success = res
+                        Action = action,
+                        Result = obj,
+                        Success = res,
                     };
                     yield return actionResult;
                 }

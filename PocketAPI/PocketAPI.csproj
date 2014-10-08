@@ -44,6 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Actions\ActionResult.cs" />
+    <Compile Include="Components\Actions\TagRenamePocketAction.cs" />
+    <Compile Include="Components\Actions\TagsClearPocketAction.cs" />
+    <Compile Include="Components\Actions\TagsReplacePocketAction.cs" />
+    <Compile Include="Components\Actions\TagsRemovePocketAction.cs" />
+    <Compile Include="Components\Actions\TagsAddPocketAction.cs" />
+    <Compile Include="Components\Actions\DeletePocketAction.cs" />
+    <Compile Include="Components\Actions\UnfavoritePocketAction.cs" />
+    <Compile Include="Components\Actions\FavoritePocketAction.cs" />
+    <Compile Include="Components\Actions\UnarchivePocketAction.cs" />
     <Compile Include="Components\Actions\AddPocketAction.cs" />
     <Compile Include="Components\Actions\ArchivePocketAction.cs" />
     <Compile Include="Components\Actions\PocketAction.cs" />
@@ -53,6 +62,7 @@
     <Compile Include="Components\HttpMethod.cs" />
     <Compile Include="ConfirmEventArgs.cs" />
     <Compile Include="Components\JsonHttpHelper.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces\IHttpHelper.cs" />
     <Compile Include="Interfaces\IHttpHelperRequest.cs" />
     <Compile Include="Interfaces\IHttpHelperResponse.cs" />

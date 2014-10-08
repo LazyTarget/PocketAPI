@@ -3,32 +3,23 @@ using Newtonsoft.Json;
 
 namespace PocketAPI
 {
-    public class AddPocketAction : PocketAction
+    public class TagsReplacePocketAction : PocketAction
     {
-        public AddPocketAction()
+        public TagsReplacePocketAction()
         {
             Time = DateTime.UtcNow;
         }
 
         public override string Action
         {
-            get { return "add"; }
+            get { return "tags_replace"; }
         }
 
         //[JsonProperty(PropertyName = "item_id")]
         //public int ItemID { get; set; }
 
-        [JsonProperty(PropertyName = "ref_id")]
-        public int RefID { get; set; }
-
-        [JsonProperty(PropertyName = "url")]
-        public string Url { get; set; }
-
         [JsonProperty(PropertyName = "tags")]
         public string Tags { get; set; }
-
-        [JsonProperty(PropertyName = "title")]
-        public string Title { get; set; }
 
         [JsonProperty(PropertyName = "time"), JsonIgnore]
         public DateTime Time { get; set; }
@@ -36,7 +27,7 @@ namespace PocketAPI
 
         public override string ToString()
         {
-            var res = string.Format("Add item '{0}'", Url);
+            var res = string.Format("Set tags '{0}' for item #{1}", Tags, ItemID);
             return res;
         }
     }

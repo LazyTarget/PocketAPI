@@ -3,20 +3,26 @@ using Newtonsoft.Json;
 
 namespace PocketAPI
 {
-    public class ArchivePocketAction : PocketAction
+    public class TagRenamePocketAction : PocketAction
     {
-        public ArchivePocketAction()
+        public TagRenamePocketAction()
         {
             Time = DateTime.UtcNow;
         }
 
         public override string Action
         {
-            get { return "archive"; }
+            get { return "tag_rename"; }
         }
 
         //[JsonProperty(PropertyName = "item_id")]
         //public int ItemID { get; set; }
+
+        [JsonProperty(PropertyName = "old_tag")]
+        public string OldTag { get; set; }
+
+        [JsonProperty(PropertyName = "new_tag")]
+        public string NewTag { get; set; }
 
         [JsonProperty(PropertyName = "time"), JsonIgnore]
         public DateTime Time { get; set; }
@@ -24,7 +30,7 @@ namespace PocketAPI
 
         public override string ToString()
         {
-            var res = string.Format("Archive item #{0}", ItemID);
+            var res = string.Format("Renaming tag '{0}' to '{1}' (#{2})", OldTag, NewTag, ItemID);
             return res;
         }
     }

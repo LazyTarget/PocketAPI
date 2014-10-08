@@ -3,16 +3,16 @@ using Newtonsoft.Json;
 
 namespace PocketAPI
 {
-    public class ArchivePocketAction : PocketAction
+    public class DeletePocketAction : PocketAction
     {
-        public ArchivePocketAction()
+        public DeletePocketAction()
         {
             Time = DateTime.UtcNow;
         }
 
         public override string Action
         {
-            get { return "archive"; }
+            get { return "delete"; }
         }
 
         //[JsonProperty(PropertyName = "item_id")]
@@ -24,7 +24,7 @@ namespace PocketAPI
 
         public override string ToString()
         {
-            var res = string.Format("Archive item #{0}", ItemID);
+            var res = string.Format("Delete item #{0}", ItemID);
             return res;
         }
     }

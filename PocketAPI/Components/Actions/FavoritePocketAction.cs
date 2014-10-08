@@ -3,16 +3,16 @@ using Newtonsoft.Json;
 
 namespace PocketAPI
 {
-    public class ArchivePocketAction : PocketAction
+    public class FavoritePocketAction : PocketAction
     {
-        public ArchivePocketAction()
+        public FavoritePocketAction()
         {
             Time = DateTime.UtcNow;
         }
 
         public override string Action
         {
-            get { return "archive"; }
+            get { return "favorite"; }
         }
 
         //[JsonProperty(PropertyName = "item_id")]
@@ -24,7 +24,7 @@ namespace PocketAPI
 
         public override string ToString()
         {
-            var res = string.Format("Archive item #{0}", ItemID);
+            var res = string.Format("Favorite item #{0}", ItemID);
             return res;
         }
     }
