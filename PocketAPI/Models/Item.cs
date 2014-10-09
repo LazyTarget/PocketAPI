@@ -36,5 +36,12 @@ namespace PocketAPI
 
         [JsonProperty(PropertyName = "is_article", NullValueHandling = NullValueHandling.Ignore)]
         public int IsArticle { get; set; }
+
+
+        public override string ToString()
+        {
+            var res = ResolvedTitle ?? GivenTitle;
+            return res;
+        }
     }
 }

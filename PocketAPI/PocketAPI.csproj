@@ -60,6 +60,7 @@
     <Compile Include="Components\HttpHelperRequest.cs" />
     <Compile Include="Components\HttpHelperResponse.cs" />
     <Compile Include="Components\HttpMethod.cs" />
+    <Compile Include="Components\TickDateTimeConverter.cs" />
     <Compile Include="ConfirmEventArgs.cs" />
     <Compile Include="Components\JsonHttpHelper.cs" />
     <Compile Include="Extensions.cs" />

@@ -16,7 +16,7 @@
             {
                 var item = (Item)Result;
                 if (!string.IsNullOrWhiteSpace(item.ResolvedTitle))
-                    res = string.Format("{0} ({2}) => {1}", Action, Success, item.ResolvedTitle);
+                    res = string.Format("{0} ({2}) => {1}", Action, Success, item);
             }
             return res;
         }

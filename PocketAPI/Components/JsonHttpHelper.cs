@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace PocketAPI
 {
@@ -13,8 +14,10 @@ namespace PocketAPI
             Settings = new JsonSerializerSettings
             {
                 DateParseHandling = DateParseHandling.DateTime,
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             };
+            //Settings.Converters.Add(new JavaScriptDateTimeConverter());
+            Settings.Converters.Add(new TickDateTimeConverter());
         }
 
 

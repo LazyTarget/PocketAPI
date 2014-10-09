@@ -18,8 +18,8 @@ namespace PocketAPI
         //[JsonProperty(PropertyName = "item_id")]
         //public int ItemID { get; set; }
 
-        [JsonProperty(PropertyName = "time"), JsonIgnore]
-        public DateTime Time { get; set; }
+        //[JsonProperty(PropertyName = "time"), JsonIgnore]
+        //public DateTime Time { get; set; }
 
 
         public override string ToString()

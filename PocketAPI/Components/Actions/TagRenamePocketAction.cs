@@ -24,8 +24,8 @@ namespace PocketAPI
         [JsonProperty(PropertyName = "new_tag")]
         public string NewTag { get; set; }
 
-        [JsonProperty(PropertyName = "time"), JsonIgnore]
-        public DateTime Time { get; set; }
+        //[JsonProperty(PropertyName = "time"), JsonIgnore]
+        //public DateTime Time { get; set; }
 
 
         public override string ToString()

@@ -10,6 +10,7 @@ namespace PocketAPI
             Time = DateTime.UtcNow;
         }
 
+
         public override string Action
         {
             get { return "add"; }
@@ -30,8 +31,8 @@ namespace PocketAPI
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
 
-        [JsonProperty(PropertyName = "time"), JsonIgnore]
-        public DateTime Time { get; set; }
+        //[JsonProperty(PropertyName = "time", ItemConverterType = typeof(JavaScriptDateTimeConverter))]
+        //public DateTime Time { get; set; }
 
 
         public override string ToString()
