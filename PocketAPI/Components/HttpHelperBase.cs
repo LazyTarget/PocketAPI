@@ -52,10 +52,13 @@ namespace PocketAPI
 
 
             // Set payload
-            using (var stream = httpWebRequest.GetRequestStream())
+            if (!httpWebRequest.Method.Equals(HttpMethod.GET, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                SetRequestPayload(request, stream);
-                stream.Close();
+                using (var stream = httpWebRequest.GetRequestStream())
+                {
+                    SetRequestPayload(request, stream);
+                    stream.Close();
+                }
             }
 
             return httpWebRequest;
