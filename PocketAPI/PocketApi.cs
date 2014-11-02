@@ -172,7 +172,13 @@ namespace PocketAPI
             requestData.Add("access_token", _accessCode);
 
             requestData.Add("count", 10);
-            requestData.Add("state", "all");
+            requestData.Add("state", "all");                    // both unread and archived
+            //requestData.Add("favorite", "1");                 // Only favorited items
+            //requestData.Add("tag", "9gag");                   // Only item with tag
+            //requestData.Add("contentType", "article");        // Specific content type
+            //requestData.Add("sort", "newest");                // sort (newest, oldest, title, site)
+            requestData.Add("detailType", "complete");          // should retrieve tags, images, authors, videos and more? (simple, complete)
+
 
 
             var request = new HttpHelperRequest
