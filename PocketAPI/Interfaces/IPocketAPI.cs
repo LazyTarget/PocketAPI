@@ -6,8 +6,9 @@ namespace PocketAPI
     {
         void Authenticate();
 
-        IEnumerable<Item> GetItems();
+        IEnumerable<Item> GetItems(GetItemsRequest request);
 
+        IEnumerable<ActionResult> Modify(IEnumerable<PocketAction> actions);
 
     }
 }

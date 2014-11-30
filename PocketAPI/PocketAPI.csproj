@@ -56,6 +56,7 @@
     <Compile Include="Components\Actions\AddPocketAction.cs" />
     <Compile Include="Components\Actions\ArchivePocketAction.cs" />
     <Compile Include="Components\Actions\PocketAction.cs" />
+    <Compile Include="DTOs\GetItemsRequest.cs" />
     <Compile Include="Components\HttpHelperBase.cs" />
     <Compile Include="Components\HttpHelperRequest.cs" />
     <Compile Include="Components\HttpHelperResponse.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Components\TickDateTimeConverter.cs" />
     <Compile Include="ConfirmEventArgs.cs" />
     <Compile Include="Components\JsonHttpHelper.cs" />
+    <Compile Include="Models\ItemTag.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces\IHttpHelper.cs" />
     <Compile Include="Interfaces\IHttpHelperRequest.cs" />

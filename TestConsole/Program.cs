@@ -115,7 +115,8 @@ namespace TestConsole
                     else if (command == "get")
                     {
                         Console.WriteLine("---Items---");
-                        var titles = svc.GetItems().ToList();
+                        var request = new GetItemsRequest();
+                        var titles = svc.GetItems(request).ToList();
                         if (titles.Any())
                         {
                             foreach (var t in titles)

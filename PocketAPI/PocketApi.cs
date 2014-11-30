@@ -163,31 +163,40 @@ namespace PocketAPI
         }
 
 
-        private IEnumerable<Item> _GetItems()
+        private IEnumerable<Item> _GetItems(GetItemsRequest request)
         {
             Authenticate();
+
+            request = request ?? new GetItemsRequest();
 
             var requestData = new Dictionary<string, object>();
             requestData.Add("consumer_key", ConsumerKey);
             requestData.Add("access_token", _accessCode);
 
-            requestData.Add("count", 10);
-            requestData.Add("state", "all");                    // both unread and archived
-            //requestData.Add("favorite", "1");                 // Only favorited items
-            //requestData.Add("tag", "9gag");                   // Only item with tag
+            requestData.Add("count", request.PageSize);
+            requestData.Add("offset", request.Page * request.PageSize);
+            requestData.Add("state",
+                request.State == ItemState.All
+                    ? "all"
+                    : request.State == ItemState.Archived
+                        ? "archive"
+                        : "unread");
+            requestData.Add("favorite", request.Favorite ? "1" : "0");
+            if (!string.IsNullOrEmpty(request.Tag))
+                requestData.Add("tag", request.Tag);
             //requestData.Add("contentType", "article");        // Specific content type
             //requestData.Add("sort", "newest");                // sort (newest, oldest, title, site)
             requestData.Add("detailType", "complete");          // should retrieve tags, images, authors, videos and more? (simple, complete)
 
 
 
-            var request = new HttpHelperRequest
+            var httpRequest = new HttpHelperRequest
             {
                 Data = requestData,
                 Url = URL.GetItems,
                 Method = HttpMethod.POST
             };
-            var response = HttpHelper.Send<JObject>(request);       // todo: create dto
+            var response = HttpHelper.Send<JObject>(httpRequest);       // todo: create dto
 
             if (response.Response.StatusCode == HttpStatusCode.OK)
             {
@@ -204,9 +213,9 @@ namespace PocketAPI
                 throw PocketException.Create(response.Response);
         }
         
-        public IEnumerable<Item> GetItems()
+        public IEnumerable<Item> GetItems(GetItemsRequest request)
         {
-            var enumerable = _GetItems();
+            var enumerable = _GetItems(request);
             var enumerator = enumerable.GetEnumerator();
             enumerable = TryCatchEnumerable(enumerator);
             return enumerable;
